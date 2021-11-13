@@ -1,6 +1,6 @@
 from scipy.spatial import distance
 import math
-import playsound,cv2
+import cv2
 import numpy as np
 
 BLACK = (0,0,0)
@@ -117,8 +117,8 @@ def eyesExtractor(img, right_eye_coords, left_eye_coords):
     return cropped_right, cropped_left
 
 # play an alarm sound
-def sound_alarm(path):
-	playsound.playsound(path)
+# def sound_alarm(path):
+# 	playsound.playsound(path)
 
 # Get Pupil Circularity
 # def circularity(eye):
