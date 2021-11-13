@@ -28,7 +28,7 @@ Closed_frames = 0
 
 class Video(object):
     def __init__(self):
-        self.video = cv2.VideoCapture(-1)
+        self.video = cv2.VideoCapture(0)
         self.Closed_frames = Closed_frames
         self.Open_frames = Open_frames
         self.count = count
