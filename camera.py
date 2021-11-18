@@ -3,6 +3,9 @@ import mediapipe as mp
 from keras.models import load_model
 import utils
 import numpy as np
+import time
+
+
 
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
@@ -43,6 +46,7 @@ class Video(object):
     def __del__(self):
         self.video.release()
     
+
     def get_frame(self):
         with mp_face_mesh.FaceMesh(
         max_num_faces=1,
@@ -85,15 +89,15 @@ class Video(object):
 
                     # Check if eyes are open or closed
                     crop_right, crop_left = utils.eyesExtractor(image, right_coords, left_coords)
-
+                    print(crop_right.shape)
                     # cv2.imshow("right",crop_right)
                     # cv2.imshow("left",crop_left)
 
                     for x in crop_right:
                         self.count=self.count+1
                         r_eye = cv2.cvtColor(crop_right,cv2.IMREAD_COLOR)
-                        r_eye = cv2.resize(r_eye,(145,145))
                         r_eye= r_eye/255
+                        r_eye = cv2.resize(r_eye,(145,145))
                         r_eye=  r_eye.reshape(-1,145,145,3)
                         self.rpred = np.argmax(model.predict(r_eye))
                         if(self.rpred==3):
@@ -104,8 +108,8 @@ class Video(object):
                     for y in crop_left:
                         self.count=self.count+1
                         l_eye = cv2.cvtColor(crop_left,cv2.IMREAD_COLOR)    
-                        l_eye = cv2.resize(l_eye,(145,145))
                         l_eye= l_eye/255
+                        l_eye = cv2.resize(l_eye,(145,145))
                         l_eye=l_eye.reshape(-1,145,145,3)
                         self.lpred = np.argmax(model.predict(l_eye))
                         if(self.lpred==3):
@@ -126,10 +130,19 @@ class Video(object):
                         cv2.putText(image,"Open",(10,height-20), font, 1,(255,255,255),1,cv2.LINE_AA)
                     if(self.score<0):
                         self.score=0   
-                    cv2.putText(image,'Score:'+str(self.score),(100,height-20), font, 1,(255,255,255),1,cv2.LINE_AA)
+                    cv2.putText(image,'Frames:'+str(self.score),(100,height-20), font, 1,(255,255,255),1,cv2.LINE_AA)
 
                     # Getting the PERCLOS
-                    print("PERCLOS: " + str(utils.perclos(self.Closed_frames,self.Open_frames)))
+                    perclos = str(utils.perclos(self.Closed_frames,self.Open_frames))
+                    print("PERCLOS: " + perclos)
                     
+                # while True: 
+                    response=utils.request(perclos,self.TOTAL_BLINKS)
+                    print("response"+str(response))  
+
+
+
             ret,jpg = cv2.imencode('.jpg',image)
             return jpg.tobytes()
+
+        

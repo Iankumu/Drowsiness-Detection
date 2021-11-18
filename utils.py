@@ -1,7 +1,11 @@
+from flask.globals import session
 from scipy.spatial import distance
 import math
-import cv2
+import playsound,cv2
 import numpy as np
+import requests
+import time
+from flask import request as Request
 
 BLACK = (0,0,0)
 WHITE = (255,255,255)
@@ -32,6 +36,13 @@ RIGHT_EYEBROW=[ 70, 63, 105, 66, 107, 55, 65, 52, 53, 46 ]
 LIPS=[ 61, 146, 91, 181, 84, 17, 314, 405, 321, 375,291, 308, 324, 318, 402, 317, 14, 87, 178, 88, 95,185, 40, 39, 37,0 ,267 ,269 ,270 ,409, 415, 310, 311, 312, 13, 82, 81, 42, 183, 78 ]
 LOWER_LIPS =[61, 146, 91, 181, 84, 17, 314, 405, 321, 375, 291, 308, 324, 318, 402, 317, 14, 87, 178, 88, 95]
 UPPER_LIPS=[ 185, 40, 39, 37,0 ,267 ,269 ,270 ,409, 415, 310, 311, 312, 13, 82, 81, 42, 183, 78] 
+
+
+RIGHT_AREA = RIGHT_EYEBROW + RIGHT_EYE
+LEFT_AREA = LEFT_EYEBROW + LEFT_EYE
+
+Base_Url= 'http://localhost:8000'
+
 
 
 # Eucledian Distance
@@ -74,65 +85,53 @@ def blinkRatio(img,landmarks,right_indices,left_indices):
 
 # Eyes Extractor function,
 def eyesExtractor(img, right_eye_coords, left_eye_coords):
-    # converting color image to  scale image 
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    
-    # getting the dimension of image 
-    dim = gray.shape
+  # converting color image to  scale image 
+  gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+  
+  # getting the dimension of image 
+  dim = gray.shape
 
-    # creating mask from gray scale dim
-    mask = np.zeros(dim, dtype=np.uint8)
+  # creating mask from gray scale dim
+  mask = np.zeros(dim, dtype=np.uint8)
 
-    # drawing Eyes Shape on mask with white color 
-    cv2.fillPoly(mask, [np.array(right_eye_coords, dtype=np.int32)], 255)
-    cv2.fillPoly(mask, [np.array(left_eye_coords, dtype=np.int32)], 255)
+  # drawing Eyes Shape on mask with white color 
+  cv2.fillPoly(mask, [np.array(right_eye_coords, dtype=np.int32)], 255)
+  cv2.fillPoly(mask, [np.array(left_eye_coords, dtype=np.int32)], 255)
 
-    # showing the mask 
-    # cv2.imshow('mask', mask)
-    
-    # draw eyes image on mask, where white shape is the eyes
-    eyes = cv2.bitwise_and(gray, gray, mask=mask)
-    # change black color to gray 
-    # cv2.imshow('eyes draw', eyes)
-    eyes[mask==0]=155
-    
-    # getting minium and maximum x and y  for right and left eyes 
-    # For Right Eye 
-    r_max_x = (max(right_eye_coords, key=lambda item: item[0]))[0]
-    r_min_x = (min(right_eye_coords, key=lambda item: item[0]))[0]
-    r_max_y = (max(right_eye_coords, key=lambda item : item[1]))[1]
-    r_min_y = (min(right_eye_coords, key=lambda item: item[1]))[1]
+  # showing the mask 
+  # cv2.imshow('mask', mask)
+  
+  # draw eyes image on mask, where white shape is the eyes
+  eyes = cv2.bitwise_and(gray, gray, mask=mask)
+  # eyes = cv2.bitwise_and(img, img, mask=mask)
+  # change black color to gray 
+  # cv2.imshow('eyes draw', eyes)
+  eyes[mask==0]=155
+  
+  # getting minium and maximum x and y  for right and left eyes 
+  # For Right Eye 
+  r_max_x = (max(right_eye_coords, key=lambda item: item[0]))[0]
+  r_min_x = (min(right_eye_coords, key=lambda item: item[0]))[0]
+  r_max_y = (max(right_eye_coords, key=lambda item : item[1]))[1]
+  r_min_y = (min(right_eye_coords, key=lambda item: item[1]))[1]
 
-    # For LEFT Eye
-    l_max_x = (max(left_eye_coords, key=lambda item: item[0]))[0]
-    l_min_x = (min(left_eye_coords, key=lambda item: item[0]))[0]
-    l_max_y = (max(left_eye_coords, key=lambda item : item[1]))[1]
-    l_min_y = (min(left_eye_coords, key=lambda item: item[1]))[1]
+  # For LEFT Eye
+  l_max_x = (max(left_eye_coords, key=lambda item: item[0]))[0]
+  l_min_x = (min(left_eye_coords, key=lambda item: item[0]))[0]
+  l_max_y = (max(left_eye_coords, key=lambda item : item[1]))[1]
+  l_min_y = (min(left_eye_coords, key=lambda item: item[1]))[1]
 
-    # croping the eyes from mask 
-    cropped_right = eyes[r_min_y: r_max_y, r_min_x: r_max_x]
-    cropped_left = eyes[l_min_y: l_max_y, l_min_x: l_max_x]
+  # croping the eyes from mask 
+  cropped_right = eyes[r_min_y: r_max_y, r_min_x: r_max_x]
+  cropped_left = eyes[l_min_y: l_max_y, l_min_x: l_max_x]
 
-    # returning the cropped eyes 
-    return cropped_right, cropped_left
+  # returning the cropped eyes 
+  return cropped_right, cropped_left
 
 # play an alarm sound
-# def sound_alarm(path):
-# 	playsound.playsound(path)
+def sound_alarm(path):
+	playsound.playsound(path)
 
-# Get Pupil Circularity
-# def circularity(eye):
-#     A = distance.euclidean(eye[1], eye[4])
-#     radius  = A/2.0
-#     Area = math.pi * (radius ** 2)
-#     p = 0
-#     p += distance.euclidean(eye[0], eye[1])
-#     p += distance.euclidean(eye[1], eye[2])
-#     p += distance.euclidean(eye[2], eye[3])
-#     p += distance.euclidean(eye[3], eye[4])
-#     p += distance.euclidean(eye[4], eye[5])
-#     p += distance.euclidean(eye[5], eye[0])
-#     return 4 * math.pi * Area /(p**2)
 
 # PERCLOS
 def perclos(frame_closed,frame_open):
@@ -142,26 +141,48 @@ def perclos(frame_closed,frame_open):
 
 # landmark detection function
 def landmarksDetection(img,results,draw=False):
-    img_height,img_width =img.shape[:2]
-    mesh_coords = [(int(point.x * img_width),(int(point.y*img_height))) for point in results.multi_face_landmarks[0].landmark] 
-    if draw:
-        [cv2.circle(img,p,2,color,-1) for p in mesh_coords]
+  img_height,img_width =img.shape[:2]
+  mesh_coords = [(int(point.x * img_width),(int(point.y*img_height))) for point in results.multi_face_landmarks[0].landmark] 
+  if draw:
+      [cv2.circle(img,p,2,color,-1) for p in mesh_coords]
 
-    return mesh_coords
+  return mesh_coords
 
 def fillPolyTrans(img, points, color, opacity):
-    """
-    @param img: (mat) input image, where shape is drawn.
-    @param points: list [tuples(int, int) these are the points custom shape,FillPoly
-    @param color: (tuples (int, int, int)
-    @param opacity:  it is transparency of image.
-    @return: img(mat) image with rectangle draw.
-    """
-    list_to_np_array = np.array(points, dtype=np.int32)
-    overlay = img.copy()  # coping the image
-    cv2.fillPoly(overlay,[list_to_np_array], color )
-    new_img = cv2.addWeighted(overlay, opacity, img, 1 - opacity, 0)
-    # print(points_list)
-    img = new_img
-    cv2.polylines(img, [list_to_np_array], True, color,1, cv2.LINE_AA)
-    return img
+  """
+  @param img: (mat) input image, where shape is drawn.
+  @param points: list [tuples(int, int) these are the points custom shape,FillPoly
+  @param color: (tuples (int, int, int)
+  @param opacity:  it is transparency of image.
+  @return: img(mat) image with rectangle draw.
+  """
+  list_to_np_array = np.array(points, dtype=np.int32)
+  overlay = img.copy()  # coping the image
+  cv2.fillPoly(overlay,[list_to_np_array], color )
+  new_img = cv2.addWeighted(overlay, opacity, img, 1 - opacity, 0)
+  # print(points_list)
+  img = new_img
+  cv2.polylines(img, [list_to_np_array], True, color,1, cv2.LINE_AA)
+  return img
+
+def login(email,password):
+  data = {'email':email,'password':password}
+  url = Base_Url + '/api/login'
+  response = requests.post(url, data=data)
+  return response.json()
+
+def request(perclos,blinks):
+  headers = {'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiYWFmZmYzMTc3Njc4Zjk2MzBjZWM5Nzg2NzE5NDVkYmY2NTZlY2M0YmRjYmQ4OTljNjNlN2UxMDBkMjQwMjc3Njc4NDc1NjEwNWQ1NjI4MDAiLCJpYXQiOjE2MzcxNDI5MTMuNjg4NTIyLCJuYmYiOjE2MzcxNDI5MTMuNjg4NTMxLCJleHAiOjE2Njg2Nzg5MTMuMzU3Mzc3LCJzdWIiOiIxMSIsInNjb3BlcyI6W119.XF0TVJ0gKWaNP1nUXla7gL8sOnzxgmo-erAF18h-00Xb6HDvSgVklBtuCc_Im8V3l68ldU4s_tclxWKUu1rHKFZ1A9IOnNVs4WIZuoNDGlLgHoaqWu-O6zYsoWDJJ4xqy9OgXi2DArXGQDyCg_Pz0a5VN-kk16M3lk2WNye9a1xJujOxQO0DAnbeP16GPpfmQqWfCJLxv4guQa1M-o1u2jkDW9Cb2FKNGUGGh2VO6UvKc049zGTdfGL-KlaYJyBIPkaKhNZ2c0D-UmX5E4T9KYx90sEN4FIe4QILurpRXQwNbnVT9tDhwJzvBYnPoCD-S8dCby6_m61tQIYE2JyfGazQuxBOtwIA56ha6GydISspSzQlKsKgyF-u56IL0HqwN3PIDh3bIy5L_8T03f-jJF6_ESjddiJVn2e0SKlRJFq7mVAR14dTBVx1M-Sg4k9htkMCIt_9WtSaWr9C-gJMe6Q2dCw7N4grU24wGym6cx8kICvfSTZ3osRAD4R6vCMMPNPe7M2BYNyfSL6HugA18P274ee4BE2dyYzl669GhDZvTIzHhuKxmf5CcBGGm9f1-s6tg6iXIkJD1-0Gez6pehpJXaVdDt7Y01xvO0J4nDw7Aq-7DXzS5QFkL7LsyVLtTNBDXylJCUuGYfXNHvksdLAAFSypvzA05jomfZvBElM'}
+  data = {'perclos':perclos,'blinks':blinks}
+  url = Base_Url + '/api/drowsiness'
+  response = requests.post(url, data=data, headers=headers)
+  return response.json()
+
+def logout(token):
+  headers = {'Authorization':'Bearer '+token}
+  url = Base_Url + '/api/logout'
+  response = requests.get(url, headers=headers)
+  if response.status_code != 200:
+    return response.json()
+ 
+

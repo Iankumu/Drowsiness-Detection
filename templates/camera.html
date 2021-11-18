@@ -1,0 +1,9 @@
+{% extends 'main.html'%}
+
+{% block content%}
+
+<h1 class="text-center">Driver Drowsiness Detection System</h1>
+  <div class="container text-center mt-3">
+    <img src="{{ url_for('video')}}" alt="Driver Video">
+  </div>
+{% endblock content%}

@@ -1,0 +1,14 @@
+{% extends 'main.html'%}
+
+{% block content%}
+
+    <div class="row">
+        <div class="col-12 text-center mt-10">
+            <form action="{{ url_for('login') }}" method="post">
+                <input type="email" name="email" placeholder="Enter Email">
+                <input type="password" name="password" placeholder="Enter Password">
+                <button type="submit" class="btn btn-primary text-center">Login</button>
+            </form>            
+        </div>
+    </div>
+{% endblock content%}
