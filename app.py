@@ -14,6 +14,20 @@ Session(app)
 def index():
     return render_template('index.html')
 
+@app.route('/register',methods=['GET','POST'])
+def register():
+    if request.method == "POST":
+        name = request.form.get('name')
+        email = request.form.get('email')
+        password = request.form.get('password')
+        confirm = request.form.get('confirm')
+        response = utils.register(name,email,password,confirm)
+        session['token'] = response['access_token']
+        return redirect('/')
+    else:
+        return render_template('register.html')
+
+
 @app.route('/login',methods=['POST','GET'])
 def login():
     if request.method == "POST":
@@ -45,7 +59,6 @@ def video():
     return Response(gen(Video(token)),
     mimetype='multipart/x-mixed-replace; boundary=frame')
 
-# @login_required
 @app.route('/logout',methods = ['GET'])
 def logout():
     token = session.get('token')

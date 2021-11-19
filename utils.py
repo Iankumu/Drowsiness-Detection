@@ -165,6 +165,12 @@ def fillPolyTrans(img, points, color, opacity):
   cv2.polylines(img, [list_to_np_array], True, color,1, cv2.LINE_AA)
   return img
 
+def register(name,email,password,confirm):
+  data = {'name':name,'email':email,'password':password,'password_confirmation':confirm}
+  url = Base_Url + '/api/register'
+  response = requests.post(url, data=data)
+  return response.json()
+
 def login(email,password):
   data = {'email':email,'password':password}
   url = Base_Url + '/api/login'

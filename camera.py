@@ -91,7 +91,6 @@ class Video(object):
 
                     # Check if eyes are open or closed
                     crop_right, crop_left = utils.eyesExtractor(image, right_coords, left_coords)
-                    print(crop_right.shape)
                     # cv2.imshow("right",crop_right)
                     # cv2.imshow("left",crop_left)
 
@@ -138,7 +137,6 @@ class Video(object):
                     perclos = str(utils.perclos(self.Closed_frames,self.Open_frames))
                     print("PERCLOS: " + perclos)
                     
-                # while True: 
                     response=utils.request(perclos,self.TOTAL_BLINKS,self.token)
                     print("response"+str(response))  
 

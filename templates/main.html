@@ -21,6 +21,10 @@
               </li>
               {% if session.token == null %}
               <li class="nav-item">
+                <a class="nav-link" href="/register">Register</a>
+              </li>
+              
+              <li class="nav-item">
                 <a class="nav-link" href="/login">Login</a>
                 <!-- <a class="nav-link" href="/login">Login</a> -->
               </li>
@@ -29,9 +33,6 @@
                 <a class="nav-link" href="/logout">Logout</a>
               </li>
               {%endif%}
-              <li class="nav-item">
-                <a class="nav-link" href="#">Pricing</a>
-              </li>
               <li class="nav-item">
                 <a class="nav-link disabled">Disabled</a>
               </li>
