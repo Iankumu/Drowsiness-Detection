@@ -171,8 +171,8 @@ def login(email,password):
   response = requests.post(url, data=data)
   return response.json()
 
-def request(perclos,blinks):
-  headers = {'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiYWFmZmYzMTc3Njc4Zjk2MzBjZWM5Nzg2NzE5NDVkYmY2NTZlY2M0YmRjYmQ4OTljNjNlN2UxMDBkMjQwMjc3Njc4NDc1NjEwNWQ1NjI4MDAiLCJpYXQiOjE2MzcxNDI5MTMuNjg4NTIyLCJuYmYiOjE2MzcxNDI5MTMuNjg4NTMxLCJleHAiOjE2Njg2Nzg5MTMuMzU3Mzc3LCJzdWIiOiIxMSIsInNjb3BlcyI6W119.XF0TVJ0gKWaNP1nUXla7gL8sOnzxgmo-erAF18h-00Xb6HDvSgVklBtuCc_Im8V3l68ldU4s_tclxWKUu1rHKFZ1A9IOnNVs4WIZuoNDGlLgHoaqWu-O6zYsoWDJJ4xqy9OgXi2DArXGQDyCg_Pz0a5VN-kk16M3lk2WNye9a1xJujOxQO0DAnbeP16GPpfmQqWfCJLxv4guQa1M-o1u2jkDW9Cb2FKNGUGGh2VO6UvKc049zGTdfGL-KlaYJyBIPkaKhNZ2c0D-UmX5E4T9KYx90sEN4FIe4QILurpRXQwNbnVT9tDhwJzvBYnPoCD-S8dCby6_m61tQIYE2JyfGazQuxBOtwIA56ha6GydISspSzQlKsKgyF-u56IL0HqwN3PIDh3bIy5L_8T03f-jJF6_ESjddiJVn2e0SKlRJFq7mVAR14dTBVx1M-Sg4k9htkMCIt_9WtSaWr9C-gJMe6Q2dCw7N4grU24wGym6cx8kICvfSTZ3osRAD4R6vCMMPNPe7M2BYNyfSL6HugA18P274ee4BE2dyYzl669GhDZvTIzHhuKxmf5CcBGGm9f1-s6tg6iXIkJD1-0Gez6pehpJXaVdDt7Y01xvO0J4nDw7Aq-7DXzS5QFkL7LsyVLtTNBDXylJCUuGYfXNHvksdLAAFSypvzA05jomfZvBElM'}
+def request(perclos,blinks,token):
+  headers = {'Authorization':'Bearer '+token}
   data = {'perclos':perclos,'blinks':blinks}
   url = Base_Url + '/api/drowsiness'
   response = requests.post(url, data=data, headers=headers)

@@ -41,7 +41,8 @@ def gen(camera):
 
 @app.route('/video')
 def video():
-    return Response(gen(Video()),
+    token = session.get('token')
+    return Response(gen(Video(token)),
     mimetype='multipart/x-mixed-replace; boundary=frame')
 
 # @login_required
@@ -55,5 +56,5 @@ def logout():
     else:
         return redirect('/login')
 
-if  __name__ == '__main__':
+if __name__ == '__main__':
     app.run(debug=True)

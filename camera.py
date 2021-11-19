@@ -27,10 +27,11 @@ TOTAL_BLINKS = 0
 
 Open_frames = 0
 Closed_frames = 0
+token = ''
 # 0-yawn, 1-no_yawn, 2-Closed, 3-Open
 
 class Video(object):
-    def __init__(self):
+    def __init__(self,token):
         self.video = cv2.VideoCapture(0)
         self.Closed_frames = Closed_frames
         self.Open_frames = Open_frames
@@ -42,6 +43,7 @@ class Video(object):
         self.CEF_COUNTER = CEF_COUNTER
         self.CLOSED_EYES_FRAME = CLOSED_EYES_FRAME
         self.TOTAL_BLINKS = TOTAL_BLINKS
+        self.token = token
 
     def __del__(self):
         self.video.release()
@@ -137,7 +139,7 @@ class Video(object):
                     print("PERCLOS: " + perclos)
                     
                 # while True: 
-                    response=utils.request(perclos,self.TOTAL_BLINKS)
+                    response=utils.request(perclos,self.TOTAL_BLINKS,self.token)
                     print("response"+str(response))  
 
 
