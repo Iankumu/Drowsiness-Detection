@@ -1,4 +1,4 @@
-from flask import Flask,redirect,render_template,Response,request,session,make_response
+from flask import Flask,redirect,render_template,Response,request,session
 from keras import utils
 from camera import Video
 import utils
@@ -53,11 +53,21 @@ def gen(camera):
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
 
+def stop(camera):
+    camera.__del__()
+
 @app.route('/video')
 def video():
     token = session.get('token')
     return Response(gen(Video(token)),
     mimetype='multipart/x-mixed-replace; boundary=frame')
+
+@app.route('/stop',methods = ["GET"])
+def stopCamera():
+    token = session.get('token')
+    stop(Video(token))
+    return redirect('/')
+
 
 @app.route('/logout',methods = ['GET'])
 def logout():
@@ -68,6 +78,7 @@ def logout():
         return redirect('/')
     else:
         return redirect('/login')
+
 
 if __name__ == '__main__':
     app.run(debug=True)
