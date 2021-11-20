@@ -41,8 +41,7 @@ UPPER_LIPS=[ 185, 40, 39, 37,0 ,267 ,269 ,270 ,409, 415, 310, 311, 312, 13, 82, 
 RIGHT_AREA = RIGHT_EYEBROW + RIGHT_EYE
 LEFT_AREA = LEFT_EYEBROW + LEFT_EYE
 
-# Base_Url= 'http://localhost:8000'
-Base_Url= 'https://drowsiness.iankumu.com'
+Base_Url= 'http://localhost:8000'
 
 
 
@@ -176,7 +175,9 @@ def login(email,password):
   data = {'email':email,'password':password}
   url = Base_Url + '/api/login'
   response = requests.post(url, data=data)
-  return response.json()
+  if response.status_code == 200:
+    return response.json()
+  
 
 def request(perclos,blinks,token):
   headers = {'Authorization':'Bearer '+token}

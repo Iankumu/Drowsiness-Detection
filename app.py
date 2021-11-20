@@ -6,6 +6,7 @@ from flask_session import Session
 
 
 app = Flask(__name__)
+
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
@@ -23,7 +24,7 @@ def register():
         confirm = request.form.get('confirm')
         response = utils.register(name,email,password,confirm)
         session['token'] = response['access_token']
-        return redirect('/')
+        return redirect('/dashboard')
     else:
         return render_template('register.html')
 
@@ -34,8 +35,12 @@ def login():
         email = request.form.get('email')
         password = request.form.get('password')
         response=utils.login(email,password)
-        session['token'] = response['access_token']
-        return redirect('/')
+
+        if response != None:
+            session['token'] = response['access_token']
+            return redirect('/dashboard')
+        else:
+            return redirect('/')
     else:
         return render_template('login.html')
 
@@ -66,8 +71,15 @@ def video():
 def stopCamera():
     token = session.get('token')
     stop(Video(token))
-    return redirect('/')
+    return redirect('/dashboard')
 
+@app.route('/dashboard')
+def dashboard():
+    token = session.get('token')
+    if token == None:
+        return redirect('/')
+    else:
+        return render_template('dashboard.html')
 
 @app.route('/logout',methods = ['GET'])
 def logout():
