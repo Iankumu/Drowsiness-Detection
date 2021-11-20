@@ -41,7 +41,8 @@ UPPER_LIPS=[ 185, 40, 39, 37,0 ,267 ,269 ,270 ,409, 415, 310, 311, 312, 13, 82, 
 RIGHT_AREA = RIGHT_EYEBROW + RIGHT_EYE
 LEFT_AREA = LEFT_EYEBROW + LEFT_EYE
 
-Base_Url= 'http://localhost:8000'
+# Base_Url= 'http://localhost:8000'
+Base_Url= 'https://drowsiness.iankumu.com'
 
 
 
