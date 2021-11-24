@@ -101,9 +101,8 @@ def eyesExtractor(img, right_eye_coords, left_eye_coords):
   # showing the mask 
   # cv2.imshow('mask', mask)
   
-  # draw eyes image on mask, where white shape is the eyes
+  # draw eyes image on mask, where the white shapes are the eyes
   eyes = cv2.bitwise_and(gray, gray, mask=mask)
-  # eyes = cv2.bitwise_and(img, img, mask=mask)
   # change black color to gray 
   # cv2.imshow('eyes draw', eyes)
   eyes[mask==0]=155
@@ -149,13 +148,6 @@ def landmarksDetection(img,results,draw=False):
   return mesh_coords
 
 def fillPolyTrans(img, points, color, opacity):
-  """
-  @param img: (mat) input image, where shape is drawn.
-  @param points: list [tuples(int, int) these are the points custom shape,FillPoly
-  @param color: (tuples (int, int, int)
-  @param opacity:  it is transparency of image.
-  @return: img(mat) image with rectangle draw.
-  """
   list_to_np_array = np.array(points, dtype=np.int32)
   overlay = img.copy()  # coping the image
   cv2.fillPoly(overlay,[list_to_np_array], color )
@@ -185,6 +177,13 @@ def request(perclos,blinks,token):
   url = Base_Url + '/api/drowsiness'
   response = requests.post(url, data=data, headers=headers)
   return response.json()
+
+def profile(token):
+  headers = {'Authorization':'Bearer '+token}
+  url = Base_Url + '/api/user'
+  response = requests.get(url, headers=headers)
+  if response.status_code == 200:
+    return response.json()
 
 def logout(token):
   headers = {'Authorization':'Bearer '+token}

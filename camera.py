@@ -98,8 +98,8 @@ class Video(object):
                     for x in crop_right:
                         self.count=self.count+1
                         r_eye = cv2.cvtColor(crop_right,cv2.IMREAD_COLOR)
-                        r_eye= r_eye/255
                         r_eye = cv2.resize(r_eye,(145,145))
+                        r_eye= r_eye/255
                         r_eye=  r_eye.reshape(-1,145,145,3)
                         self.rpred = np.argmax(model.predict(r_eye))
                         if(self.rpred==3):
@@ -109,9 +109,9 @@ class Video(object):
                         break
                     for y in crop_left:
                         self.count=self.count+1
-                        l_eye = cv2.cvtColor(crop_left,cv2.IMREAD_COLOR)    
-                        l_eye= l_eye/255
-                        l_eye = cv2.resize(l_eye,(145,145))
+                        l_eye = cv2.cvtColor(crop_left,cv2.IMREAD_COLOR)
+                        l_eye = cv2.resize(l_eye,(145,145))    
+                        l_eye= l_eye/255                        
                         l_eye=l_eye.reshape(-1,145,145,3)
                         self.lpred = np.argmax(model.predict(l_eye))
                         if(self.lpred==3):

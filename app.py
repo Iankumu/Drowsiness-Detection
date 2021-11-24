@@ -81,6 +81,17 @@ def dashboard():
     else:
         return render_template('dashboard.html')
 
+@app.route('/profile',methods=['GET'])
+def profile():
+    token = session.get('token')
+    if token == None:
+        return redirect('/login')
+    else:
+        response = utils.profile(token)
+        return render_template('profile.html',data = response)
+
+
+
 @app.route('/logout',methods = ['GET'])
 def logout():
     token = session.get('token')
