@@ -1,11 +1,13 @@
 from flask.globals import session
 from scipy.spatial import distance
 import math
-import playsound,cv2
+import cv2
 import numpy as np
 import requests
 import time
 from flask import request as Request
+from playsound import playsound
+
 
 BLACK = (0,0,0)
 WHITE = (255,255,255)
@@ -37,9 +39,6 @@ LIPS=[ 61, 146, 91, 181, 84, 17, 314, 405, 321, 375,291, 308, 324, 318, 402, 317
 LOWER_LIPS =[61, 146, 91, 181, 84, 17, 314, 405, 321, 375, 291, 308, 324, 318, 402, 317, 14, 87, 178, 88, 95]
 UPPER_LIPS=[ 185, 40, 39, 37,0 ,267 ,269 ,270 ,409, 415, 310, 311, 312, 13, 82, 81, 42, 183, 78] 
 
-
-RIGHT_AREA = RIGHT_EYEBROW + RIGHT_EYE
-LEFT_AREA = LEFT_EYEBROW + LEFT_EYE
 
 Base_Url= 'http://localhost:8000'
 
@@ -82,6 +81,18 @@ def blinkRatio(img,landmarks,right_indices,left_indices):
 
   ratio = (reRatio+leRatio)/2
   return ratio
+
+# EAR
+def ear(landmarks,indices):
+  p1=landmarks[indices[0]]
+  p2=landmarks[indices[11]]
+  p3=landmarks[indices[13]]
+  p4=landmarks[indices[15]]
+  p5=landmarks[indices[3]]
+  p6=landmarks[indices[5]]
+
+  ear = (eucledianDistance(p2,p6) + eucledianDistance(p3,p5)) / (2.0 * eucledianDistance(p1,p4))
+  return ear
 
 # Eyes Extractor function,
 def eyesExtractor(img, right_eye_coords, left_eye_coords):
@@ -128,15 +139,14 @@ def eyesExtractor(img, right_eye_coords, left_eye_coords):
   return cropped_right, cropped_left
 
 # play an alarm sound
-def sound_alarm(path):
-	playsound.playsound(path)
+def sound_alarm():
+	playsound('alarm/alarm.wav')
 
 
 # PERCLOS
 def perclos(frame_closed,frame_open):
   perclos = frame_closed/(frame_open+frame_closed) * 100
-  return perclos
-
+  return perclos  
 
 # landmark detection function
 def landmarksDetection(img,results,draw=False):

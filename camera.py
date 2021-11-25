@@ -4,6 +4,7 @@ from keras.models import load_model
 import utils
 import numpy as np
 import time
+from threading import Thread
 
 
 
@@ -20,10 +21,12 @@ count=0
 score=0
 rpred=[99]
 lpred=[99]
+ALARM_ON = False
 
 CLOSED_EYES_FRAME = 3
 CEF_COUNTER = 0
 TOTAL_BLINKS = 0
+PERCLOS = 0
 
 Open_frames = 0
 Closed_frames = 0
@@ -44,6 +47,8 @@ class Video(object):
         self.CLOSED_EYES_FRAME = CLOSED_EYES_FRAME
         self.TOTAL_BLINKS = TOTAL_BLINKS
         self.token = token
+        self.PERCLOS=PERCLOS
+        self.ALARM_ON = ALARM_ON
 
     def __del__(self):
         self.video.release()
@@ -76,8 +81,8 @@ class Video(object):
 
                     # Getting the Blink Ratio
                     ratio = utils.blinkRatio(image,mesh_coords,utils.RIGHT_EYE,utils.LEFT_EYE)
-                    cv2.putText(image, f'ratio {ratio}', (100, 100),
-                            font, 1.0, utils.GREEN, 2)
+                    # cv2.putText(image, f'ratio {ratio}', (100, 100),
+                    #         font, 1.0, utils.GREEN, 2)
                     if ratio > 4.9:
                         self.CEF_COUNTER += 1 
                     cv2.putText(image, 'Blinks', (200, 30),font, 1.3, utils.PINK, 2)
@@ -90,17 +95,29 @@ class Video(object):
                     right_coords = [mesh_coords[p] for p in utils.RIGHT_EYE]
                     left_coords = [mesh_coords[p] for p in utils.LEFT_EYE]
 
-                    # Check if eyes are open or closed
+                    # Get EAR
+                    leftear =utils.ear(mesh_coords,utils.LEFT_EYE) 
+                    rightear =utils.ear(mesh_coords,utils.RIGHT_EYE) 
+
+                    ear = (leftear+rightear)/2
+
+                    cv2.putText(image, f'EAR {ear}', (100, 100),
+                            font, 1.0, utils.GREEN, 2)
+
+                    
+                    # Return the cropped eyes in gray scale
                     crop_right, crop_left = utils.eyesExtractor(image, right_coords, left_coords)
                     # cv2.imshow("right",crop_right)
                     # cv2.imshow("left",crop_left)
 
+                    # Check if eyes are open or closed
                     for x in crop_right:
                         self.count=self.count+1
                         r_eye = cv2.cvtColor(crop_right,cv2.IMREAD_COLOR)
                         r_eye = cv2.resize(r_eye,(145,145))
                         r_eye= r_eye/255
                         r_eye=  r_eye.reshape(-1,145,145,3)
+                        r_eye = np.expand_dims(r_eye,axis=0)
                         self.rpred = np.argmax(model.predict(r_eye))
                         if(self.rpred==3):
                             self.label='Open' 
@@ -113,6 +130,7 @@ class Video(object):
                         l_eye = cv2.resize(l_eye,(145,145))    
                         l_eye= l_eye/255                        
                         l_eye=l_eye.reshape(-1,145,145,3)
+                        l_eye = np.expand_dims(l_eye,axis=0)
                         self.lpred = np.argmax(model.predict(l_eye))
                         if(self.lpred==3):
                             self.label='Open'   
@@ -135,11 +153,21 @@ class Video(object):
                     cv2.putText(image,'Frames:'+str(self.score),(100,height-20), font, 1,(255,255,255),1,cv2.LINE_AA)
 
                     # Getting the PERCLOS
-                    perclos = str(utils.perclos(self.Closed_frames,self.Open_frames))
-                    print("PERCLOS: " + perclos)
+                    self.PERCLOS = str(utils.perclos(self.Closed_frames,self.Open_frames))
+                    print("PERCLOS: " + self.PERCLOS)
                     
-                    response=utils.request(perclos,self.TOTAL_BLINKS,self.token)
-                    print("response"+str(response))  
+                # response=utils.request(self.PERCLOS,self.TOTAL_BLINKS,self.token)
+                # print("response"+str(response))  
+
+                #driver is sleepy so we beep the alarm
+                # if self.score > 10:
+                #     if not self.ALARM_ON:
+                #         self.ALARM_ON = True
+                #         t=Thread(target=utils.sound_alarm)
+                #         t.daemon=True
+                #         t.start()
+                # else:
+                #     self.ALARM_ON = False
 
 
 
