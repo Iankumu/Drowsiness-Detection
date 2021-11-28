@@ -117,7 +117,6 @@ class Video(object):
                         r_eye = cv2.resize(r_eye,(145,145))
                         r_eye= r_eye/255
                         r_eye=  r_eye.reshape(-1,145,145,3)
-                        r_eye = np.expand_dims(r_eye,axis=0)
                         self.rpred = np.argmax(model.predict(r_eye))
                         if(self.rpred==3):
                             self.label='Open' 
@@ -130,7 +129,6 @@ class Video(object):
                         l_eye = cv2.resize(l_eye,(145,145))    
                         l_eye= l_eye/255                        
                         l_eye=l_eye.reshape(-1,145,145,3)
-                        l_eye = np.expand_dims(l_eye,axis=0)
                         self.lpred = np.argmax(model.predict(l_eye))
                         if(self.lpred==3):
                             self.label='Open'   
@@ -160,14 +158,14 @@ class Video(object):
                 # print("response"+str(response))  
 
                 #driver is sleepy so we beep the alarm
-                # if self.score > 10:
-                #     if not self.ALARM_ON:
-                #         self.ALARM_ON = True
-                #         t=Thread(target=utils.sound_alarm)
-                #         t.daemon=True
-                #         t.start()
-                # else:
-                #     self.ALARM_ON = False
+                if self.score > 5:
+                    if not self.ALARM_ON:
+                        self.ALARM_ON = True
+                        t=Thread(target=utils.sound_alarm)
+                        t.daemon=True
+                        t.start()
+                else:
+                    self.ALARM_ON = False
 
 
 
