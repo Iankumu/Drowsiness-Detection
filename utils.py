@@ -201,5 +201,12 @@ def logout(token):
   response = requests.get(url, headers=headers)
   if response.status_code != 200:
     return response.json()
+
+def signals(token):
+  headers = {'Authorization':'Bearer '+token}
+  url = Base_Url + '/api/signals'
+  response = requests.get(url, headers=headers)
+  if response.status_code != 200:
+    return response.json()
  
 

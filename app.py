@@ -79,7 +79,9 @@ def dashboard():
     if token == None:
         return redirect('/')
     else:
-        return render_template('dashboard.html')
+        signals = utils.signals(token)
+        user = utils.profile(token)
+        return render_template('dashboard.html',signals=signals,user=user)
 
 @app.route('/profile',methods=['GET'])
 def profile():
@@ -88,7 +90,7 @@ def profile():
         return redirect('/login')
     else:
         response = utils.profile(token)
-        return render_template('profile.html',data = response)
+        return render_template('profile.html',user = response)
 
 
 
