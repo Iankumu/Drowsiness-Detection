@@ -40,7 +40,8 @@ LOWER_LIPS =[61, 146, 91, 181, 84, 17, 314, 405, 321, 375, 291, 308, 324, 318, 4
 UPPER_LIPS=[ 185, 40, 39, 37,0 ,267 ,269 ,270 ,409, 415, 310, 311, 312, 13, 82, 81, 42, 183, 78] 
 
 
-Base_Url= 'http://localhost:8000'
+# Base_Url= 'http://localhost:8000'
+Base_Url= 'https://drowsiness.iankumu.com'
 
 
 
