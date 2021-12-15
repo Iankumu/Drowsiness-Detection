@@ -3,6 +3,7 @@
  {% block content %}
  {% include 'sidebar.html' %}
  
+
  <div class="main-content" id="panel">
 
  {% include 'nav.html' %}
@@ -32,20 +33,7 @@
                   <h5 class="h3 text-white mb-0">Drowsiness</h5>
                 </div>
                 <div class="col">
-                  <ul class="nav nav-pills justify-content-end">
-                    <li class="nav-item mr-2 mr-md-0" data-toggle="chart" data-target="#chart-sales-dark" data-update='{"data":{"datasets":[{"data":[0, 20, 10, 30, 15, 40, 20, 60, 60]}]}}' data-suffix="%">
-                      <a href="#" class="nav-link py-2 px-3 active" data-toggle="tab">
-                        <span class="d-none d-md-block">Month</span>
-                        <span class="d-md-none">M</span>
-                      </a>
-                    </li>
-                    <li class="nav-item" data-toggle="chart" data-target="#chart-sales-dark" data-update='{"data":{"datasets":[{"data":[0, 20, 5, 25, 10, 30, 15, 40, 40]}]}}'  data-suffix="%">
-                      <a href="#" class="nav-link py-2 px-3" data-toggle="tab">
-                        <span class="d-none d-md-block">Week</span>
-                        <span class="d-md-none">W</span>
-                      </a>
-                    </li>
-                  </ul>
+                  <!-- {{blinks}} -->
                 </div>
               </div>
             </div>
@@ -53,7 +41,8 @@
               <!-- Chart -->
               <div class="chart">
                 <!-- Chart wrapper -->
-                <canvas id="chart-sales-dark" class="chart-canvas"></canvas>
+                <!-- <canvas id="chart-sales-dark" class="chart-canvas"></canvas> -->
+                <canvas id="chart-drowsiness-dark"class="chart-canvas"></canvas>
               </div>
             </div>
           </div>
@@ -71,7 +60,8 @@
             <div class="card-body">
               <!-- Chart -->
               <div class="chart">
-                <canvas id="chart-bars" class="chart-canvas"></canvas>
+                <canvas id="chart-blinks-dark" class="chart-canvas"></canvas>
+                <!-- <canvas id="chart-bars" class="chart-canvas"></canvas> -->
               </div>
             </div>
           </div>
@@ -81,4 +71,51 @@
     </div>
 </div>
 
-  {% endblock content %}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- <script src="{{ url_for('static',filename='assets/js/components/charts/chart-drowsiness.js')}}" type="text/javascript"></script> -->
+
+<script>
+  // get chart canvas
+  var blinks = document.getElementById("chart-blinks-dark").getContext("2d");
+  var perclos = document.getElementById("chart-drowsiness-dark").getContext("2d");
+   
+  // create the chart using the chart canvas
+  // var myChart = new Chart(blinks, {
+  // type: 'bar',
+  // data: {
+  //   labels:[{% for item in perclos %}
+  //         {{item}},
+  //         {% endfor %}],
+  //   datasets:[
+  //   {
+  //     label:"Drowiness Level",
+  //     data:{{blinks|safe}},
+  //     fill:false,
+  //     borderColor:"rgb(75,192,192)",
+  //     lineTension:0.1,
+
+  //   }]
+
+  // }
+  // });
+  var perclosChart = new Chart(perclos, {
+  type: 'line',
+  data: {
+    labels:{{labels|safe}},
+    datasets:[
+    {
+      label:"Drowiness Level",
+      data:{{perclos|safe}},
+      fill:false,
+      borderColor:"rgb(75,192,192)",
+      lineTension:0.1,
+
+    }]
+
+  }
+  });
+            
+</script>
+
+{% endblock content %}

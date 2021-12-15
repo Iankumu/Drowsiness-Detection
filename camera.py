@@ -154,7 +154,7 @@ class Video(object):
                     self.PERCLOS = str(utils.perclos(self.Closed_frames,self.Open_frames))
                     print("PERCLOS: " + self.PERCLOS)
                     
-                # response=utils.request(self.PERCLOS,self.TOTAL_BLINKS,self.token) 
+                response=utils.request(self.PERCLOS,self.TOTAL_BLINKS,self.token) 
 
                 #driver is sleepy so we beep the alarm
                 if self.score > 5:

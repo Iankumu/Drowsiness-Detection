@@ -3,13 +3,22 @@ from keras import utils
 from camera import Video
 import utils
 from flask_session import Session
+import numpy as np
+import json
+# from flask_googlecharts import GoogleCharts
 
 
 app = Flask(__name__)
+# charts = GoogleCharts(app)
 
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
+
+
+blinks = []
+perclos = []
+Labels = []
 
 @app.route('/')
 def index():
@@ -81,7 +90,15 @@ def dashboard():
     else:
         signals = utils.signals(token)
         user = utils.profile(token)
-        return render_template('dashboard.html',signals=signals,user=user)
+        signal=json.loads(json.dumps(signals))
+        values = [value for value in signal['data']]
+        
+        for value in values:
+            blinks.append(int(value['blinks']))
+            perclos.append(max(0,float(value['perclos'])))
+            Labels.append(value['created_at'])
+
+        return render_template('dashboard.html',user=user,blinks=blinks,perclos=perclos,labels=Labels)
 
 @app.route('/profile',methods=['GET'])
 def profile():

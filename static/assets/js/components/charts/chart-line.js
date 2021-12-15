@@ -1,10 +1,10 @@
 'use strict';
 
 //
-// Sales chart
+// Drowsiness chart
 //
 
-var SalesChart = (function() {
+var drowsinessChart = (function() {
 
   // Variables
 
