@@ -80,25 +80,22 @@
   var blinks = document.getElementById("chart-blinks-dark").getContext("2d");
   var perclos = document.getElementById("chart-drowsiness-dark").getContext("2d");
    
-  // create the chart using the chart canvas
-  // var myChart = new Chart(blinks, {
-  // type: 'bar',
-  // data: {
-  //   labels:[{% for item in perclos %}
-  //         {{item}},
-  //         {% endfor %}],
-  //   datasets:[
-  //   {
-  //     label:"Drowiness Level",
-  //     data:{{blinks|safe}},
-  //     fill:false,
-  //     borderColor:"rgb(75,192,192)",
-  //     lineTension:0.1,
+  var blinksChart = new Chart(blinks, {
+  type: 'bar',
+  data: {
+    labels:{{labels|safe}},
+    datasets:[
+    {
+      label:"Blinks",
+      data:{{blinks|safe}},
+      fill:false,
+      borderColor:"rgb(75,192,192)",
+      lineTension:0.1,
 
-  //   }]
+    }]
 
-  // }
-  // });
+  }
+  });
   var perclosChart = new Chart(perclos, {
   type: 'line',
   data: {
@@ -109,7 +106,7 @@
       data:{{perclos|safe}},
       fill:false,
       borderColor:"rgb(75,192,192)",
-      lineTension:0.1,
+      lineTension:1,
 
     }]
 

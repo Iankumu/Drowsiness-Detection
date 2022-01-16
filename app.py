@@ -5,11 +5,11 @@ import utils
 from flask_session import Session
 import numpy as np
 import json
-# from flask_googlecharts import GoogleCharts
+
 
 
 app = Flask(__name__)
-# charts = GoogleCharts(app)
+
 
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
@@ -96,6 +96,8 @@ def dashboard():
         for value in values:
             blinks.append(int(value['blinks']))
             perclos.append(max(0,float(value['perclos'])))
+            # x = datetime.datetime(int(value['created_at']))
+            # Labels.append(x.strftime("%c"))
             Labels.append(value['created_at'])
 
         return render_template('dashboard.html',user=user,blinks=blinks,perclos=perclos,labels=Labels)

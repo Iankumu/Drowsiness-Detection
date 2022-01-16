@@ -1,15 +1,32 @@
 {% extends 'main.html'%}
 
 {% block content%}
-
-{% if session.token !=null %}
-    
+   
+<div class="container">
     <div class="row">
-        <div class="col-12 text-center mt-10">
-            <a href="/camera" class="btn btn-primary text-center">Start Camera</a>
+        <div class="col-12">
+            <video width="1200" height="auto" autoplay loop muted playsinline>
+                <source src="{{ url_for('static',filename='assets/video/drive.mp4')}}" type="video/mp4" />
+              </video>
         </div>
     </div>
-
-{% endif %}
-   
+    <div class="row">
+        <div class="col-md-6 col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    
+                    <h5 class="text-center"></h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-sm-12">
+            <div class="card">
+                <div class="card-body">
+                    
+                    <h5 class="text-center"></h5>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock content%}
