@@ -2,31 +2,125 @@
 
 {% block content%}
    
-<div class="container">
+<div class="m-3">
     <div class="row">
-        <div class="col-12">
-            <video width="1200" height="auto" autoplay loop muted playsinline>
-                <source src="{{ url_for('static',filename='assets/video/drive.mp4')}}" type="video/mp4" />
-              </video>
+        <img style="height:50%;" src="{{ url_for('static',filename='assets/img/driving.jpg')}}">
+    </div>
+    <div class="row">
+         <div class="col-md-6 col-sm-12 mt-2">               
+            <div class="mt-5">
+                <h4 class="text-center">Accurate</h4>
+                <p class="text-center">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p> 
+            </div>              
+        </div>
+        <div class="col-md-6 col-sm-12 mt-2">                
+            <img src="{{ url_for('static',filename='assets/img/accurate.jpg')}}">    
         </div>
     </div>
     <div class="row">
-        <div class="col-md-6 col-sm-12">
-            <div class="card">
-                <div class="card-body">
-                    
-                    <h5 class="text-center"></h5>
+        <div class="col-md-6 col-sm-12 mt-2">
+            <img src="{{ url_for('static',filename='assets/img/clock.jpg')}}">
+        </div>
+         <div class="col-md-6 col-sm-12 mt-2">
+            <div class="mt-5">
+                <h4 class="text-center">Timely</h4>
+                <p class="text-center">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+             </div>
+        </div>
+    </div>
+    <h3 class="text-center m-5">What people are saying</h3>
+    <div class="row">
+        <div class="col-lg-4 col-md-6 col-sm-12">
+            <div class="row">
+                 <div class="col-12 text-center">
+                    <img style = "width: 192px;height: 192px;" class="img-fluid rounded-circle mb-3"  src="{{ url_for('static',filename='assets/img/driver1.jpg')}}">
                 </div>
             </div>
-        </div>
-        <div class="col-md-6 col-sm-12">
-            <div class="card">
-                <div class="card-body">
-                    
-                    <h5 class="text-center"></h5>
-                </div>
+            <div class="row">
+                <h5 class="text-center">Sarah W.</h5>
+                <p class="text-center">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                quis nostrud exercitation </p>
             </div>
         </div>
+        <div class="col-lg-4 col-md-6 col-sm-12">
+            <div class="row">
+                 <div class="col-12 text-center">
+                    <img style = "width: 192px;height: 192px;" class="img-fluid rounded-circle mb-3" src="{{ url_for('static',filename='assets/img/driver2.jpg')}}">
+                </div>
+            </div>
+            <div class="row">
+                <h5 class="text-center">Margaret E.</h5>
+                <p class="text-center">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                quis nostrud </p>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <img style = "width: 192px;height: 192px;" class="img-fluid rounded-circle mb-3" src="{{ url_for('static',filename='assets/img/driver3.jpg')}}">
+                </div>
+            </div>
+            <div class="row">
+                <h5 class="text-center">Fred S.</h5>
+                <p class="text-center">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                quis nostrud exercitation </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <section class="call-to-action text-center" id="signup">
+            <div class="container position-relative">
+                <div class="row justify-content-center">
+                    <div class="col-xl-6">
+                        <h2 class="mb-4">Ready to get started? Sign up now!</h2>
+                        <form class="form-subscribe" id="contactFormFooter">
+                            <!-- Email address input-->
+                            <div class="row">
+                                <div class="col">
+                                    <input class="form-control form-control-lg" id="emailAddressBelow" type="email" placeholder="Email Address" data-sb-validations="required,email" data-sb-can-submit="no">
+                                    <div class="invalid-feedback text-white" data-sb-feedback="emailAddressBelow:required">Email Address is required.</div>
+                                    <div class="invalid-feedback text-white" data-sb-feedback="emailAddressBelow:email">Email Address Email is not valid.</div>
+                                </div>
+                                <div class="col-auto"><button class="btn btn-primary btn-lg disabled" id="submitButton" type="submit">Submit</button></div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer bg-light mt-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 h-100 text-center text-lg-start my-auto">
+                        <ul class="list-inline mb-2">
+                            <li class="list-inline-item"><a href="#">About</a></li>
+                            <li class="list-inline-item">⋅</li>
+                            <li class="list-inline-item"><a href="#">Contact</a></li>
+                            <li class="list-inline-item">⋅</li>
+                            <li class="list-inline-item"><a href="#">Terms of Use</a></li>
+                            <li class="list-inline-item">⋅</li>
+                            <li class="list-inline-item"><a href="#">Privacy Policy</a></li>
+                        </ul>
+                        <p class="text-muted small mb-4 mb-lg-0">© Your Website 2022. All Rights Reserved.</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
     </div>
 </div>
 {% endblock content%}

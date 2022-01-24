@@ -81,8 +81,7 @@ class Video(object):
 
                     # Getting the Blink Ratio
                     ratio = utils.blinkRatio(image,mesh_coords,utils.RIGHT_EYE,utils.LEFT_EYE)
-                    # cv2.putText(image, f'ratio {ratio}', (100, 100),
-                    #         font, 1.0, utils.GREEN, 2)
+                    
                     if ratio > 4.9:
                         self.CEF_COUNTER += 1 
                     cv2.putText(image, 'Blinks', (200, 30),font, 1.3, utils.PINK, 2)

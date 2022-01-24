@@ -41,9 +41,6 @@ UPPER_LIPS=[ 185, 40, 39, 37,0 ,267 ,269 ,270 ,409, 415, 310, 311, 312, 13, 82, 
 
 
 Base_Url= 'http://localhost:8000'
-# Base_Url= 'https://drowsiness.iankumu.com'
-
-
 
 # Eucledian Distance
 def eucledianDistance(point,point1):

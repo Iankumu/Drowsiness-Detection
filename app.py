@@ -96,8 +96,6 @@ def dashboard():
         for value in values:
             blinks.append(int(value['blinks']))
             perclos.append(max(0,float(value['perclos'])))
-            # x = datetime.datetime(int(value['created_at']))
-            # Labels.append(x.strftime("%c"))
             Labels.append(value['created_at'])
 
         return render_template('dashboard.html',user=user,blinks=blinks,perclos=perclos,labels=Labels)
@@ -125,4 +123,4 @@ def logout():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
