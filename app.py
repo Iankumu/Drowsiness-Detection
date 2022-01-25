@@ -1,11 +1,10 @@
-from flask import Flask,redirect,render_template,Response,request,session
+from flask import Flask, redirect, render_template, Response, request, session
 from keras import utils
 from camera import Video
 import utils
 from flask_session import Session
 import numpy as np
 import json
-
 
 
 app = Flask(__name__)
@@ -20,38 +19,43 @@ blinks = []
 perclos = []
 Labels = []
 
+
 @app.route('/')
 def index():
     return render_template('index.html')
 
-@app.route('/register',methods=['GET','POST'])
+
+@app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == "POST":
         name = request.form.get('name')
         email = request.form.get('email')
         password = request.form.get('password')
         confirm = request.form.get('confirm')
-        response = utils.register(name,email,password,confirm)
+        response = utils.register(name, email, password, confirm)
         session['token'] = response['access_token']
         return redirect('/dashboard')
     else:
         return render_template('register.html')
 
 
-@app.route('/login',methods=['POST','GET'])
+@app.route('/login', methods=['POST', 'GET'])
 def login():
+    error = None
     if request.method == "POST":
         email = request.form.get('email')
         password = request.form.get('password')
-        response=utils.login(email,password)
+        response = utils.login(email, password)
 
         if response != None:
             session['token'] = response['access_token']
             return redirect('/dashboard')
         else:
-            return redirect('/')
+            error = 'Invalid credentials'
+            return render_template('index.html', error=error)
     else:
         return render_template('login.html')
+
 
 @app.route('/camera')
 def camera():
@@ -59,7 +63,8 @@ def camera():
     if token == None:
         return redirect('/')
     else:
-        return render_template('camera.html',token = token)
+        return render_template('camera.html', token=token)
+
 
 def gen(camera):
     while True:
@@ -67,20 +72,24 @@ def gen(camera):
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
 
+
 def stop(camera):
     camera.__del__()
+
 
 @app.route('/video')
 def video():
     token = session.get('token')
     return Response(gen(Video(token)),
-    mimetype='multipart/x-mixed-replace; boundary=frame')
+                    mimetype='multipart/x-mixed-replace; boundary=frame')
 
-@app.route('/stop',methods = ["GET"])
+
+@app.route('/stop', methods=["GET"])
 def stopCamera():
     token = session.get('token')
     stop(Video(token))
     return redirect('/dashboard')
+
 
 @app.route('/dashboard')
 def dashboard():
@@ -90,28 +99,28 @@ def dashboard():
     else:
         signals = utils.signals(token)
         user = utils.profile(token)
-        signal=json.loads(json.dumps(signals))
+        signal = json.loads(json.dumps(signals))
         values = [value for value in signal['data']]
-        
+
         for value in values:
             blinks.append(int(value['blinks']))
-            perclos.append(max(0,float(value['perclos'])))
+            perclos.append(max(0, float(value['perclos'])))
             Labels.append(value['created_at'])
 
-        return render_template('dashboard.html',user=user,blinks=blinks,perclos=perclos,labels=Labels)
+        return render_template('dashboard.html', user=user, blinks=blinks, perclos=perclos, labels=Labels)
 
-@app.route('/profile',methods=['GET'])
+
+@app.route('/profile', methods=['GET'])
 def profile():
     token = session.get('token')
     if token == None:
         return redirect('/login')
     else:
         response = utils.profile(token)
-        return render_template('profile.html',user = response)
+        return render_template('profile.html', user=response)
 
 
-
-@app.route('/logout',methods = ['GET'])
+@app.route('/logout', methods=['GET'])
 def logout():
     token = session.get('token')
     if token != None:
