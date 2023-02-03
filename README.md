@@ -23,8 +23,10 @@ $ git clone https://github.com/Iankumu/Drowsiness-Detection.git
 $ cd Drowsiness-Detection
 $ git submodule --update init
 
-$ pip install
+$ pip install -r requirements.txt
 ```
+
+If you are having trouble with `opencv`,you can install the [headless version of opencv](https://pypi.org/project/opencv-python-headless/)
 
 You can also run the Laravel Backend on a separate terminal. Before you do so, ensure you have [composer](https://getcomposer.org/) and php installed in your system. To run the backend just run the following commands.
 
